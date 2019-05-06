@@ -1,0 +1,48 @@
+image: docker-registry.linagora.com:5000/linshare-snapshots/linshare-dind:latest
+
+stages:
+  - build
+
+### BEGIN OF TEMPLATES
+
+.build-docker-tpl: &build-docker-tpl
+  image: docker-registry.linagora.com:5000/linshare-snapshots/linshare-dind:latest
+  tags:
+    - docker
+  services:
+      - name: docker-registry.linagora.com:5000/linshare-snapshots/linshare-dind:latest
+        alias: docker-dind
+
+
+### END OF TEMPLATES
+
+# build and optionaly test your image here.
+build:
+  <<: *build-docker-tpl
+  stage: build
+  variables:
+      DOCKER_HOST: "tcp://docker-dind"
+  script:
+    - docker build . -t build:latest
+  except:
+    refs:
+      - master@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - tags@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - /^release-.*/@linagora/lgs/linshare/saas/linshare-init-dockerfile
+    variables:
+      - $SKIP_BUILD_DOCKER
+
+check_author:
+  image: docker-registry.linagora.com:5000/lgs-releases/gitlab-integrity-checks:latest
+  stage: build
+  variables:
+    GIT_DEPTH: "1"
+  tags:
+    - ultralight
+  script:
+    - check_author.py check "$GITLAB_USER_EMAIL" "$GITLAB_USER_NAME" --no-accents
+  except:
+    refs:
+      - master@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - tags@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - /^release-.*/@linagora/lgs/linshare/saas/linshare-init-dockerfile
