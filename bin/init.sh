@@ -5,30 +5,28 @@ set -e
 g_command=$1
 g_base_directory=$(dirname $0)
 g_prog_name=$(basename $0)
-g_ls_cfg_file="/tmp/ldap.cfg"
 g_ls_cfg_file="/root/.linshare-admin-cli.cfg"
-export FORCE_INIT=${FORCE_INIT:-0}
-# if START_DEBUG=1, debug traces will be displayed.
-export START_DEBUG=${START_DEBUG:-0}
+# if LS_START_DEBUG=1, debug traces will be displayed.
+export LS_START_DEBUG=${LS_START_DEBUG:-0}
 
-g_vars_list="TOMCAT_HOST \
-TOMCAT_PORT \
-TOMCAT_LDAP_URL \
-LINSHARE_USER_URL \
-LINSHARE_EXTERNAL_URL \
+g_vars_list="LS_SERVER_HOST \
+LS_SERVER_PORT \
+LS_LDAP_URL \
+LS_USER_URL \
+LS_EXTERNAL_URL \
 LS_PASSWORD \
-NO_REPLY_ADDRESS \
+LS_NO_REPLY_ADDRESS \
 "
-g_vars_extra_list="TOMCAT_LDAP_DN \
-TOMCAT_LDAP_PW \
-TOMCAT_LDAP_BASE_DN \
-TOMCAT_LDAP_NAME \
-FORCE_INIT \
-TOMCAT_DOMAIN_PATTERN_NAME \
-TOMCAT_DOMAIN_PATTERN_MODEL \
-EXTRA_INIT_SCRIPT \
-LINSHARE_JWT_PUB_KEY \
-LINSHARE_JWT_PUB_KEY_NAME \
+g_vars_extra_list="LS_LDAP_DN \
+LS_LDAP_PW \
+LS_LDAP_BASE_DN \
+LS_LDAP_NAME \
+LS_FORCE_INIT \
+LS_DOMAIN_PATTERN_NAME \
+LS_DOMAIN_PATTERN_MODEL \
+LS_EXTRA_INIT_SCRIPT \
+LS_JWT_PUB_KEY \
+LS_JWT_PUB_KEY_NAME \
 "
 
 ### Functions ####
@@ -64,7 +62,7 @@ function check_env_variables ()
     for l_key in ${l_vars_list}
     do
         if [[ ${l_key} =~ PASSWORD || ${l_key} =~ SECRET || ${l_key} =~ LDAP_PW ]] ; then
-            if [ ${START_DEBUG} -eq 1 ] ; then
+            if [ ${LS_START_DEBUG} -eq 1 ] ; then
                 echo "${l_key} : ${!l_key}"
             else
                 echo "${l_key} : ${!l_key:0:4}..."
@@ -87,7 +85,7 @@ function check_env_variables ()
 }
 
 function create_config_file() {
-    local l_tomcat_url="http://${TOMCAT_HOST}:${TOMCAT_PORT}"
+    local l_tomcat_url="http://${LS_SERVER_HOST}:${LS_SERVER_PORT}"
 
     echo  "[server]" > $g_ls_cfg_file
     echo  "host=${l_tomcat_url}" >> $g_ls_cfg_file
@@ -96,12 +94,12 @@ function create_config_file() {
 
 function init_basic_ls_cfg() {
     echo "INFO:${g_prog_name}: update the domain notification url"
-    linshareadmcli -E funcs update-str DOMAIN__NOTIFICATION_URL ${LINSHARE_USER_URL}
-    linshareadmcli -E funcs update-str DOMAIN__MAIL ${NO_REPLY_ADDRESS:-noreply@linshare.io}
+    linshareadmcli -E funcs update-str DOMAIN__NOTIFICATION_URL ${LS_USER_URL}
+    linshareadmcli -E funcs update-str DOMAIN__MAIL ${LS_NO_REPLY_ADDRESS}
 
     # update the anonymous notification url
     echo "INFO:${g_prog_name}: update the anonymous notification url"
-    linshareadmcli -E funcs update-str ANONYMOUS_URL__NOTIFICATION_URL ${LINSHARE_EXTERNAL_URL}
+    linshareadmcli -E funcs update-str ANONYMOUS_URL__NOTIFICATION_URL ${LS_EXTERNAL_URL}
 
     # enable GUEST functionalities.
     echo "INFO:${g_prog_name}: disable GUESTS functionalities"
@@ -110,13 +108,13 @@ function init_basic_ls_cfg() {
     echo "INFO:${g_prog_name}: disable documents expiration"
     linshareadmcli -E funcs update --disable DOCUMENT_EXPIRATION
 
-    if [ -z ${LINSHARE_JWT_PUB_KEY_NAME} ] ; then
+    if [ -z ${LS_JWT_PUB_KEY_NAME} ] ; then
         echo "INFO:${g_prog_name}: JWT extra key name was to set. skipped."
     else
-        if [ -f ${LINSHARE_JWT_PUB_KEY} ] ; then
-            l_pattern="^${LINSHARE_JWT_PUB_KEY_NAME}$"
+        if [ -f ${LS_JWT_PUB_KEY} ] ; then
+            l_pattern="^${LS_JWT_PUB_KEY_NAME}$"
             if [ $(linshareadmcli -E pubkeys list "${l_pattern}" -c --cli-mode) -ne 1 ] ; then
-                linshareadmcli -E pubkeys create --key ${LINSHARE_JWT_PUB_KEY} ${LINSHARE_JWT_PUB_KEY_NAME}
+                linshareadmcli -E pubkeys create --key ${LS_JWT_PUB_KEY} ${LS_JWT_PUB_KEY_NAME}
             fi
         else
             echo "WARN:${g_prog_name}: JWT extra key file does not exist."
@@ -131,22 +129,22 @@ function init_domains() {
     echo "INFO:${g_prog_name}: g_domain_top1: ${g_domain_top1}"
 
     # create ldap connection
-    if [ ! -z ${TOMCAT_LDAP_NAME} ] ; then
+    if [ ! -z ${LS_LDAP_NAME} ] ; then
         g_ldap_connect=$(linshareadmcli -E ldap create \
-            --provider-url ${TOMCAT_LDAP_URL} \
-            --principal "${TOMCAT_LDAP_DN}" \
-            --credential "${TOMCAT_LDAP_PW}" \
-            ${TOMCAT_LDAP_NAME} --cli-mode)
+            --provider-url ${LS_LDAP_URL} \
+            --principal "${LS_LDAP_DN}" \
+            --credential "${LS_LDAP_PW}" \
+            ${LS_LDAP_NAME} --cli-mode)
 
         # create domain pattern
         g_domain_patterns=$(linshareadmcli -E \
-            dpatterns create --model ${TOMCAT_DOMAIN_PATTERN_MODEL} \
-            ${TOMCAT_DOMAIN_PATTERN_NAME} --cli-mode)
+            dpatterns create --model ${LS_DOMAIN_PATTERN_MODEL} \
+            ${LS_DOMAIN_PATTERN_NAME} --cli-mode)
         echo "INFO:${g_prog_name}: g_ldap_connect: ${g_ldap_connect}"
         echo "INFO:${g_prog_name}: g_domain_patterns: ${g_domain_patterns}"
 
         linshareadmcli -E domains setup --ldap ${g_ldap_connect} --dpattern \
-        ${g_domain_patterns} --basedn "${TOMCAT_LDAP_BASE_DN}" ${g_domain_top1}
+        ${g_domain_patterns} --basedn "${LS_LDAP_BASE_DN}" ${g_domain_top1}
     fi
 
     echo "INFO:${g_prog_name}: creation of guest domain ..."
@@ -159,16 +157,16 @@ if [ -z $@ ] ; then
 
     check_env_variables 1 1 ${g_vars_list}
     check_env_variables 0 1 ${g_vars_extra_list}
-    if [ ${DEBUG:-0} -eq 1 ] ; then
+    if [ ${LS_DEBUG} -eq 1 ] ; then
         set -x
     fi
     create_config_file
-    linshareadmcli --password-from-env DEFAULT_PASSWORD auth update --new-password-from-env LS_PASSWORD
+    linshareadmcli --password-from-env LS_DEFAULT_PASSWORD auth update --new-password-from-env LS_PASSWORD
     linshareadmcli -E auth me
     linshareadmcli -E domains list  -k identifier -k label -k description
     res=$(linshareadmcli -E domains list -c --cli-mode)
-    if [ ${FORCE_INIT} -eq 1 ] ; then
-        echo "INFO:${g_prog_name}:FORCE_INIT: nb domains=${res}"
+    if [ ${LS_FORCE_INIT} -eq 1 ] ; then
+        echo "INFO:${g_prog_name}:LS_FORCE_INIT: nb domains=${res}"
         res=1
     else
         echo "INFO:${g_prog_name}: nb domains = ${res}"
@@ -177,8 +175,8 @@ if [ -z $@ ] ; then
         echo "INFO:${g_prog_name}: Configuration of LinShare Backend ..."
         init_basic_ls_cfg
         init_domains
-        if [ ! -z ${EXTRA_INIT_SCRIPT} ] ; then
-            for l_script in ${EXTRA_INIT_SCRIPT}
+        if [ ! -z ${LS_EXTRA_INIT_SCRIPT} ] ; then
+            for l_script in ${LS_EXTRA_INIT_SCRIPT}
             do
                 if [ -f ${l_script} ] ; then
                     echo "INFO:${g_prog_name}: running: source ${l_script}"
@@ -194,7 +192,7 @@ if [ -z $@ ] ; then
     fi
     linshareadmcli -E domains list  -k identifier -k label -k description
 else
-    if [ ${DEBUG:-0} -eq 1 ] ; then
+    if [ ${LS_DEBUG} -eq 1 ] ; then
         set -x
     fi
     ${@}
