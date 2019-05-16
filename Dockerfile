@@ -32,7 +32,7 @@ ENV LS_NO_REPLY_ADDRESS no-reply@linshare.org
 
 ENV LS_EXTRA_INIT_SCRIPT ""
 
-ENV LS_JWT_PUB_KEY "/linagora/data/public"
+ENV LS_JWT_PUB_KEY "/linagora/data/public.pem"
 ENV LS_JWT_PUB_KEY_NAME ""
 
 ENV LS_FORCE_INIT 0
