@@ -29,6 +29,7 @@ Configuration
 | LS_DOMAIN_PATTERN_NAME            | pattern-openldap | Name of the domain pattern that wil be created.
 |                                   |                  | It will be created only if LS_LDAP_NAME is defined.
 | LS_DOMAIN_PATTERN_MODEL           | 868400c0...      | Default domain pattern used as model (openldap model by default)
+| LS_DOMAIN_POLICY_AUTO             | 0                | If set to 1, LinShare will create a domain with the flag --domain-policy-auto  
 |-----------------------------------|------------------|----------------------------------------------------------------------
 | LS_EXTRA_INIT_SCRIPT              | -                | Path to an extra script that should be trigger at the end of the main script.
 |                                   |                  |   ex: /linagora/bin/extra.sh
