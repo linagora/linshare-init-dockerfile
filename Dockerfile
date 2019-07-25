@@ -26,6 +26,7 @@ ENV LS_DEFAULT_PASSWORD adminlinshare
 ENV LS_DOMAIN_PATTERN_NAME "pattern-openldap"
 ENV LS_DOMAIN_PATTERN_MODEL "868400c0-c12e-456a-8c3c-19e985290586"
 ENV LS_DOMAIN_POLICY_AUTO 0
+ENV LS_DOMAIN_NAME "top1"
 
 ENV LS_USER_URL "https://user.linshare.local"
 ENV LS_EXTERNAL_URL "https://user.linshare.local"

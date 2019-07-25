@@ -126,9 +126,9 @@ function init_domains() {
 
     echo "INFO:${g_prog_name}: creation of top domain 1 ..."
     if [ ${LS_DOMAIN_POLICY_AUTO} -eq 1 ] ; then
-        g_domain_top1=$(linshareadmcli -E domains create --type TOPDOMAIN top1 --domain-policy-auto --cli-mode)
+        g_domain_top1=$(linshareadmcli -E domains create --type TOPDOMAIN ${LS_DOMAIN_NAME} --domain-policy-auto --cli-mode)
     else
-        g_domain_top1=$(linshareadmcli -E domains create --type TOPDOMAIN top1 --cli-mode)
+        g_domain_top1=$(linshareadmcli -E domains create --type TOPDOMAIN ${LS_DOMAIN_NAME} --cli-mode)
     fi
     echo "INFO:${g_prog_name}: g_domain_top1: ${g_domain_top1}"
 
