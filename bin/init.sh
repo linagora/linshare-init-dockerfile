@@ -158,11 +158,15 @@ function init_domains() {
 
 ### Main ####
 if [ -z $@ ] ; then
-
     check_env_variables 1 1 ${g_vars_list}
     check_env_variables 0 1 ${g_vars_extra_list}
     if [ ${LS_DEBUG} -eq 1 ] ; then
         set -x
+    fi
+    export WAITFORIT_PORT=${LS_SERVER_PORT}
+    export WAITFORIT_HOST=${LS_SERVER_HOST}
+    if [ -f ${g_base_directory}/wait-for-it.sh ] ; then
+        ${g_base_directory}/wait-for-it.sh
     fi
     create_config_file
     linshareadmcli --password-from-env LS_DEFAULT_PASSWORD auth update --new-password-from-env LS_PASSWORD

@@ -11,8 +11,10 @@ Configuration
 
 | Environment variable              | Default          | Description
 |-----------------------------------|------------------|----------------------------------------------------------------------
-| LS_SERVER_HOST                       | backend          | LinShare backend ip or name
-| LS_SERVER_PORT                       | 8080             | LinShare backend port
+| WAITFORIT_HOST                    | backend          | Waiting remove host/port to be opened
+| WAITFORIT_PORT                    | 8080             | Waiting remove host/port to be opened
+| LS_SERVER_HOST                    | ${WAITFORIT_HOST}| LinShare backend ip or name
+| LS_SERVER_PORT                    | ${WAITFORIT_PORT}| LinShare backend port
 | LS_PASSWORD                       | adminlinshare    | New password or root account.
 | LS_DEFAULT_PASSWORD               | adminlinshare    | Old password used for first authentication.
 | LS_USER_URL                       | https://....     | LinShare url used for email notifications for users

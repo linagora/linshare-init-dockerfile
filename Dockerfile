@@ -8,12 +8,11 @@ RUN pip install linsharecli
 RUN mkdir -p /linagora/data
 WORKDIR /linagora
 
-RUN wget --no-check-certificate --progress=bar:force:noscroll \
- "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh" \
- -O /linagora/wait-for-it.sh && chmod 755 /linagora/wait-for-it.sh
+# Using local patched wait-for-it.sh script.
+# RUN wget --no-check-certificate --progress=bar:force:noscroll \
+#  "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh" \
+#  -O /linagora/wait-for-it.sh && chmod 755 /linagora/wait-for-it.sh
 
-ENV LS_SERVER_HOST backend
-ENV LS_SERVER_PORT 8080
 
 ENV LS_LDAP_NAME ""
 ENV LS_LDAP_URL ldap://ldap:389
@@ -42,4 +41,7 @@ ENV LS_DEBUG 0
 
 COPY bin /linagora/bin
 
-ENTRYPOINT ["/linagora/wait-for-it.sh", "-t", "15", "${LS_SERVER_HOST}:${LS_SERVER_PORT}", "--", "/linagora/bin/init.sh"]
+ENV WAITFORIT_STRICT 1
+ENV WAITFORIT_TIMEOUT 15
+
+ENTRYPOINT ["/linagora/bin/init.sh"]
