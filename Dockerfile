@@ -4,7 +4,7 @@ MAINTAINER LinShare <linshare@linagora.com>
 
 RUN apt update && apt-get install -q -y python-pip wget
 
-RUN pip install linsharecli
+RUN pip install linsharecli==0.4.6
 RUN mkdir -p /linagora/data
 WORKDIR /linagora
 
