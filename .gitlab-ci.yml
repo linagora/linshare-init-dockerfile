@@ -16,6 +16,16 @@ stages:
 
 ### END OF TEMPLATES
 
+noop:
+  stage: build
+  script:
+    - echo noop
+  only:
+    refs:
+      - master@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - tags@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - /^release-.*/@linagora/lgs/linshare/saas/linshare-init-dockerfile
+
 # build and optionaly test your image here.
 build:
   <<: *build-docker-tpl
