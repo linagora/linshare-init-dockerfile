@@ -1,17 +1,10 @@
-FROM ubuntu:19.10
+FROM python:3.8-slim-buster
 
 MAINTAINER LinShare <linshare@linagora.com>
-
-RUN apt update && apt-get install -q -y python-pip wget
 
 RUN pip install linsharecli
 RUN mkdir -p /linagora/data
 WORKDIR /linagora
-
-# Using local patched wait-for-it.sh script.
-# RUN wget --no-check-certificate --progress=bar:force:noscroll \
-#  "https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh" \
-#  -O /linagora/wait-for-it.sh && chmod 755 /linagora/wait-for-it.sh
 
 
 ENV LS_LDAP_NAME ""
