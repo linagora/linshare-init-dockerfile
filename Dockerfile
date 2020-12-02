@@ -22,6 +22,7 @@ ENV LS_DOMAIN_NAME "top1"
 
 ENV LS_USER_URL "https://user.linshare.local"
 ENV LS_EXTERNAL_URL "https://user.linshare.local"
+ENV LS_UPLOAD_REQUEST_URL "https://upload-request.linshare.local"
 ENV LS_NO_REPLY_ADDRESS no-reply@linshare.org
 
 ENV LS_EXTRA_INIT_SCRIPT ""

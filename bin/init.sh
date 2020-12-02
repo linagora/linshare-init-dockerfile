@@ -108,6 +108,9 @@ function init_basic_ls_cfg() {
     echo "INFO:${g_prog_name}: disable documents expiration"
     linshareadmcli -E funcs update --disable DOCUMENT_EXPIRATION
 
+    linshareadmcli -E funcs update UPLOAD_REQUEST --enable
+    linshareadmcli -E funcs update-str UPLOAD_REQUEST ${LS_UPLOAD_REQUEST_URL}
+
     if [ -z ${LS_JWT_PUB_KEY_NAME} ] ; then
         echo "INFO:${g_prog_name}: JWT extra key name was to set. skipped."
     else
