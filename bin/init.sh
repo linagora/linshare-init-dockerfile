@@ -91,6 +91,7 @@ function create_config_file() {
     echo  "host=${l_tomcat_url}" >> $g_ls_cfg_file
     echo  "user=root@localhost.localdomain" >> $g_ls_cfg_file
     echo  "auth_type=plain" >> $g_ls_cfg_file
+    echo  "nocache=True" >> $g_ls_cfg_file
 }
 
 function init_basic_ls_cfg() {
