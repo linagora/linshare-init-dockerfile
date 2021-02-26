@@ -2,6 +2,11 @@ FROM python:3.8-slim-buster
 
 MAINTAINER LinShare <linshare@linagora.com>
 
+ARG VERSION="4.0.3"
+ARG CHANNEL="releases"
+
+ENV LINSHARE_VERSION=$VERSION
+
 RUN pip install linsharecli
 RUN mkdir -p /linagora/data
 WORKDIR /linagora
