@@ -18,6 +18,7 @@ stages:
 
 noop:
   stage: build
+  image: library/alpine
   tags:
     - ultralight
   script:
