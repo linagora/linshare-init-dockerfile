@@ -18,6 +18,8 @@ stages:
 
 noop:
   stage: build
+  tags:
+    - ultralight
   script:
     - echo noop
   only:
