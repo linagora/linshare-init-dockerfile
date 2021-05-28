@@ -15,6 +15,7 @@ LS_LDAP_URL \
 LS_USER_URL \
 LS_EXTERNAL_URL \
 LS_PASSWORD \
+LS_DEFAULT_PASSWORD \
 LS_NO_REPLY_ADDRESS \
 "
 g_vars_extra_list="LS_LDAP_DN \
@@ -174,7 +175,7 @@ if [ -z $@ ] ; then
         ${g_base_directory}/wait-for-it.sh
     fi
     create_config_file
-    linshareadmcli --password-from-env LS_DEFAULT_PASSWORD auth update --new-password-from-env LS_PASSWORD
+    linshareadmcli --auth-type plain --password-from-env LS_DEFAULT_PASSWORD auth update --new-password-from-env LS_PASSWORD
     linshareadmcli -E auth me
     linshareadmcli -E domains list  -k identifier -k label -k description
     res=$(linshareadmcli -E domains list -c --cli-mode)
