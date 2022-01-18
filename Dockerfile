@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster
 
 MAINTAINER LinShare <linshare@linagora.com>
 
-ARG VERSION="5.0.0-rc1-1"
+ARG VERSION="5.0.0-rc2"
 ARG CHANNEL="releases"
 
 ENV LINSHARE_VERSION=$VERSION
