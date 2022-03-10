@@ -45,17 +45,17 @@ build:
     variables:
       - $SKIP_BUILD_DOCKER
 
-#check_author:
-#  image: docker-registry.linagora.com:5000/lgs-releases/gitlab-integrity-checks:latest
-#  stage: build
-#  variables:
-#    GIT_DEPTH: "1"
-#  tags:
-#    - ultralight
-#  script:
-#    - check_author.py check "$GITLAB_USER_EMAIL" "$GITLAB_USER_NAME" --no-accents
-#  except:
-#    refs:
-#      - master@linagora/lgs/linshare/saas/linshare-init-dockerfile
-#      - tags@linagora/lgs/linshare/saas/linshare-init-dockerfile
-#      - /^release-.*/@linagora/lgs/linshare/saas/linshare-init-dockerfile
+check_author:
+  image: docker-registry.linagora.com:5000/lgs-releases/gitlab-integrity-checks:latest
+  stage: build
+  variables:
+    GIT_DEPTH: "1"
+  tags:
+    - ultralight
+  script:
+    - check_author.py check "$GITLAB_USER_EMAIL" "$GITLAB_USER_NAME" --no-accents
+  except:
+    refs:
+      - master@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - tags@linagora/lgs/linshare/saas/linshare-init-dockerfile
+      - /^release-.*/@linagora/lgs/linshare/saas/linshare-init-dockerfile
