@@ -11,6 +11,7 @@ RUN pip install linsharecli
 RUN mkdir -p /linagora/data
 WORKDIR /linagora
 
+ENV LS_API "2.2"
 
 ENV LS_LDAP_NAME ""
 ENV LS_LDAP_URL ldap://ldap:389
